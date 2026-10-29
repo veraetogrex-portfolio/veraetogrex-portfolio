@@ -43,10 +43,20 @@ TIMEZONE = "ICT · UTC+7"
 CONTACT_TEXT = "ALL REPOSITORIES ↗"         # what the card shows
 CONTACT_URL = "https://github.com/veraetogrex-portfolio?tab=repositories"  # where the footer click goes
 
-# palette
-C1, C2, C3 = "#22D3EE", "#6366F1", "#C084FC"   # cyan → indigo → violet
-BG, BORDER = "#0D1117", "#21262D"
-TEXT, MUTED, SEP = "#E6EDF3", "#6E7681", "#30363D"
+# palettes: README shows the one matching the viewer's GitHub theme
+THEMES = {
+    "dark": dict(C1="#22D3EE", C2="#6366F1", C3="#C084FC",   # cyan → indigo → violet
+                 BG="#0D1117", BORDER="#21262D", TEXT="#E6EDF3", MUTED="#6E7681",
+                 SEP="#30363D", GRID="#161B22", GLOW=6),
+    "light": dict(C1="#0891B2", C2="#4F46E5", C3="#9333EA",  # same hues, darker for white bg
+                  BG="#FFFFFF", BORDER="#D0D7DE", TEXT="#1F2328", MUTED="#656D76",
+                  SEP="#D0D7DE", GRID="#EAEEF2", GLOW=2.5),
+}
+C1 = C2 = C3 = BG = BORDER = TEXT = MUTED = SEP = GRID = GLOW = None  # set by use_theme()
+
+
+def use_theme(name):
+    globals().update(THEMES[name])
 # ──────────────────────────────────────────────────────────
 
 SANS = "-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
@@ -99,13 +109,13 @@ def banner():
         gradient("g", vertical=False),
         gradient("v"),
         '<filter id="glow" x="-20%" y="-60%" width="140%" height="220%">'
-        '<feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b"/>'
+        f'<feGaussianBlur in="SourceGraphic" stdDeviation="{GLOW}" result="b"/>'
         '<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>',
         "<style>"
         ".dot{animation:run 3.2s linear infinite}"
         "@keyframes run{0%{transform:translateX(0);opacity:0}6%{opacity:1}94%{opacity:1}100%{transform:translateX(540px);opacity:0}}"
         ".n{animation:lit 3.2s linear infinite}"
-        "@keyframes lit{0%,100%{stroke:#30363D}2%,10%{stroke:" + C1 + "}22%{stroke:#30363D}}"
+        "@keyframes lit{0%,100%{stroke:" + SEP + "}2%,10%{stroke:" + C1 + "}22%{stroke:" + SEP + "}}"
         ".cur{animation:blink 1.1s steps(1,end) infinite}"
         "@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}"
         "@media (prefers-reduced-motion:reduce){.dot,.n,.cur{animation:none}}"
@@ -114,7 +124,7 @@ def banner():
         f'<rect x="0.5" y="0.5" width="{W-1}" height="{h-1}" rx="10" fill="{BG}" stroke="{BORDER}"/>',
         f'<rect x="0" y="8" width="3" height="{h-16}" rx="1.5" fill="url(#v)"/>',
         # dotted grid
-        '<g fill="#161B22">'
+        f'<g fill="{GRID}">'
         + "".join(f'<circle cx="{x}" cy="{yy}" r="1"/>' for x in range(30, W, 24) for yy in range(18, 132, 24))
         + "</g>",
         f'<text x="380" y="72" text-anchor="middle" font-family="{SANS}" font-size="50" '
@@ -235,29 +245,40 @@ def footer():
     return svg(76, body, f"Current mode: {MODE}. {TIMEZONE}. Contact: {CONTACT_TEXT}")
 
 
-def readme(alt):
+def pic(name, width, alt):
     raw = f"https://raw.githubusercontent.com/{USER}/{USER}/main/assets"
+    return (
+        f'<picture>'
+        f'<source media="(prefers-color-scheme: light)" srcset="{raw}/{name}-light.svg">'
+        f'<img src="{raw}/{name}.svg" width="{width}" alt="{escape(alt)}">'
+        f'</picture>'
+    )
+
+
+def readme(alt):
     return f"""<p align="center">
-  <img src="{raw}/banner.svg" width="760" alt="{escape(HANDLE)} — {escape(TAGLINE)}">
+  {pic("banner", 760, f"{HANDLE} — {TAGLINE}")}
 </p>
 
 <p align="center">
-  <img src="{raw}/equalizer.svg" width="760" alt="">
+  {pic("equalizer", 760, "")}
 </p>
 
 <p align="center">
-  <img src="{raw}/profile.svg" width="760" alt="{escape(alt)}"><br>
-  <a href="{CONTACT_URL}"><img src="{raw}/footer.svg" width="760" alt="{escape(MODE)} · {escape(TIMEZONE)} · {escape(CONTACT_TEXT)}"></a>
+  {pic("profile", 760, alt)}<br>
+  <a href="{CONTACT_URL}">{pic("footer", 760, f"{MODE} · {TIMEZONE} · {CONTACT_TEXT}")}</a>
 </p>
 """
 
 
 if __name__ == "__main__":
     OUT.mkdir(exist_ok=True)
-    (OUT / "banner.svg").write_text(banner())
-    (OUT / "equalizer.svg").write_text(equalizer())
-    prof, alt = profile()
-    (OUT / "profile.svg").write_text(prof)
-    (OUT / "footer.svg").write_text(footer())
+    for theme, suffix in [("dark", ""), ("light", "-light")]:
+        use_theme(theme)
+        (OUT / f"banner{suffix}.svg").write_text(banner())
+        (OUT / f"equalizer{suffix}.svg").write_text(equalizer())
+        prof, alt = profile()
+        (OUT / f"profile{suffix}.svg").write_text(prof)
+        (OUT / f"footer{suffix}.svg").write_text(footer())
     (Path(__file__).parent / "README.md").write_text(readme(alt))
     print("ok")
