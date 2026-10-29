@@ -26,12 +26,15 @@ STACK = [
 
 # (label, description, right-hand tag)
 WORK = [
+    ("BROWSER AGENT", "Claude CLI drives your Chrome via MV3 extension", "TYPESCRIPT"),
     ("MEETING RECORDER", "Meet, Telemost, Discord → diarized transcripts", "SELF-HOSTED"),
     ("LEAD ENRICHMENT", "Apollo → Perplexity → Gemini pipeline", "40 MIN → 2 MIN"),
     ("RAG CHAT AGENT", "Two-level semantic search · Qdrant · Claude", "LIVE CHAT"),
     ("SUPPORT TRIAGE", "Rules + one LLM call + validated JSON", "PYTHON"),
     ("N8N WORKFLOWS", "RAG bot · vision classification state machine", "500+ REQ/DAY"),
+    ("NEWS AUTOPOSTER", "YouTube → Whisper → LLM → Telegram channel", "N8N"),
     ("AGENT CONSOLE", "VS Code extension · Claude Code + Codex", "TYPESCRIPT"),
+    ("UI COMPONENTS", "10 animated widgets, zero dependencies", "VANILLA JS"),
     ("SUPPORT OPS", "AI rollout, QA, KPI · CSAT 20% → 85%+", "−45% COST/TICKET"),
 ]
 
