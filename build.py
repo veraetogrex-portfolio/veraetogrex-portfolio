@@ -39,7 +39,7 @@ WORK = [
 ]
 
 # UI component series (one repo + GitHub Pages demo each). Rendered as real links in README.
-SHOWCASE_URL = f"https://{USER}.github.io/"
+SHOWCASE_URL = None  # set to f"https://{USER}.github.io/" once that repo is live
 COMPONENTS = [
     ("orbit-otp", "Orbit OTP", "Code digits orbit and screw down into one verified tile"),
     ("stack-seal", "Stack Seal", "Six code cells stack into one seal"),
@@ -284,11 +284,11 @@ def components_block():
         "  <tr>\n    " + "\n    ".join(cells[i:i + 2]) + "\n  </tr>"
         for i in range(0, len(cells), 2)
     )
+    showcase = f'<br>\n  <a href="{SHOWCASE_URL}"><b>All demos on one page ↗</b></a>' if SHOWCASE_URL else ""
     return f"""<h3 align="center">UI components · a new one every day</h3>
 
 <p align="center">
-  <sub>Vanilla HTML/CSS/JS, zero dependencies, MIT. Click a name for the live demo.</sub><br>
-  <a href="{SHOWCASE_URL}"><b>All demos on one page ↗</b></a>
+  <sub>Vanilla HTML/CSS/JS, zero dependencies, MIT. Click a name for the live demo.</sub>{showcase}
 </p>
 
 <div align="center">

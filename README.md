@@ -14,8 +14,7 @@
 <h3 align="center">UI components · a new one every day</h3>
 
 <p align="center">
-  <sub>Vanilla HTML/CSS/JS, zero dependencies, MIT. Click a name for the live demo.</sub><br>
-  <a href="https://veraetogrex-portfolio.github.io/"><b>All demos on one page ↗</b></a>
+  <sub>Vanilla HTML/CSS/JS, zero dependencies, MIT. Click a name for the live demo.</sub>
 </p>
 
 <div align="center">
