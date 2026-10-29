@@ -38,6 +38,21 @@ WORK = [
     ("SUPPORT OPS", "AI rollout, QA, KPI · CSAT 20% → 85%+", "−45% COST/TICKET"),
 ]
 
+# UI component series (one repo + GitHub Pages demo each). Rendered as real links in README.
+SHOWCASE_URL = f"https://{USER}.github.io/"
+COMPONENTS = [
+    ("orbit-otp", "Orbit OTP", "Code digits orbit and screw down into one verified tile"),
+    ("stack-seal", "Stack Seal", "Six code cells stack into one seal"),
+    ("meniscus-dock", "Meniscus Dock", "The dock melts around the active tab"),
+    ("frost-desk", "Frost Desk", "Glass dashboard, every page blurs into the next"),
+    ("upgrade-checkout", "Upgrade Checkout", "The card turns around when you need the CVV"),
+    ("beacon-login", "Beacon Login", "Pull the cord, the login appears"),
+    ("earn-it", "Earn It", "The Ship button runs away until you've earned it"),
+    ("vault-meter", "Vault Meter", "Password strength from paperclip to bank vault"),
+    ("drop-fill", "Drop & Fill", "Drop a brief, the form fills itself"),
+    ("slot-booking", "Slot Booking", "Pick a day, pick a slot, booked"),
+]
+
 MODE = "wiring LLMs into real workflows"
 TIMEZONE = "ICT · UTC+7"
 CONTACT_TEXT = "ALL REPOSITORIES ↗"         # what the card shows
@@ -255,6 +270,34 @@ def pic(name, width, alt):
     )
 
 
+def components_block():
+    cells = []
+    for slug, name, line in COMPONENTS:
+        demo = f"https://{USER}.github.io/{slug}/"
+        code = f"https://github.com/{USER}/{slug}"
+        cells.append(
+            f'<td width="50%"><a href="{demo}"><b>{escape(name)}</b></a><br>'
+            f'<sub>{escape(line)}</sub><br>'
+            f'<sub><a href="{demo}">demo</a> · <a href="{code}">code</a></sub></td>'
+        )
+    rows = "\n".join(
+        "  <tr>\n    " + "\n    ".join(cells[i:i + 2]) + "\n  </tr>"
+        for i in range(0, len(cells), 2)
+    )
+    return f"""<h3 align="center">UI components · a new one every day</h3>
+
+<p align="center">
+  <sub>Vanilla HTML/CSS/JS, zero dependencies, MIT. Click a name for the live demo.</sub><br>
+  <a href="{SHOWCASE_URL}"><b>All demos on one page ↗</b></a>
+</p>
+
+<div align="center">
+<table>
+{rows}
+</table>
+</div>"""
+
+
 def readme(alt):
     return f"""<p align="center">
   {pic("banner", 760, f"{HANDLE} — {TAGLINE}")}
@@ -268,6 +311,8 @@ def readme(alt):
   {pic("profile", 760, alt)}<br>
   <a href="{CONTACT_URL}">{pic("footer", 760, f"{MODE} · {TIMEZONE} · {CONTACT_TEXT}")}</a>
 </p>
+
+{components_block()}
 """
 
 
